@@ -1,6 +1,10 @@
 SELECT 
-    w2.id
-FROM Weather AS w1
-JOIN Weather AS w2
-ON w2.recordDate = w1.recordDate + INTERVAL '1 Day'
-WHERE w2.temperature > w1.temperature
+    s.machine_id,
+    ROUND(AVG(e.timestamp - s.timestamp)::DECIMAL ,3) AS processing_time
+FROM Activity AS s
+JOIN Activity AS e
+ON s.machine_id = e.machine_id
+AND s.process_id = e.process_id
+AND s.activity_type = 'start'
+AND e.activity_type = 'end'
+GROUP BY s.machine_id
